@@ -28,105 +28,12 @@ from functools import partial
 
 from math import fabs
 from math import sqrt
-from math import atan
 from math import atan2
 from math import degrees
 from math import acos
 
 from locals import *
 from elements import box2d
-
-def ComputeCentroid(pd):
-    count = pd.vertexCount
-
-    if count < 3:
-        return False
-
-    c = box2d.b2Vec2(0, 0)
-    area = 0.0
-
-    # pRef is the reference point for forming triangles.
-    # It's location doesn't change the result (except for rounding error).
-    pRef = box2d.b2Vec2(0.0, 0.0)
-
-    inv3 = 1.0 / 3.0
-
-    for i in range(count):
-        # Triangle vertices.
-        p1 = pRef
-        p2 = pd.getVertex(i)
-        if i + 1 < count: 
-            p3 = pd.getVertex(i+1)
-        else: p3 = pd.getVertex(0)
-
-        e1 = p2 - p1
-        e2 = p3 - p1
-
-        D = box2d.b2Cross(e1, e2)
-
-        triangleArea = 0.5 * D
-        area += triangleArea
-
-        # Area weighted centroid
-        c += triangleArea * inv3 * (p1 + p2 + p3)
-
-	# Centroid
- #   if area < FLT_EPSILON:
-        #raise ValueError, "ComputeCentroid: area < FLT_EPSILON"
-
-    return c / area
-
-def checkDef(pd):
-    """Check the polygon definition for invalid vertices, etc.
-
-       Return: True if valid, False if invalid
-    """
-
-#    if pd.vertexCount < 3 or pd.vertexCount > box2d.b2_maxPolygonVertices:
-        #raise ValueError, "Invalid vertexCount"
-
-    threshold = FLT_EPSILON * FLT_EPSILON
-    verts = pd.getVertices_b2Vec2()
-    normals = []
-    v0 = verts[0]
-    for i in range(pd.vertexCount):
-        if i == pd.vertexCount-1:
-            v1 = verts[0]
-        else: v1 = verts[i+1]
-        edge=v1 - v0
-#        if edge.LengthSquared() < threshold:
-#           raise ValueError, "edge.LengthSquared < FLT_EPSILON**2" 
-        normals.append( box2d.b2Cross(edge, 1.0) )
-        normals[-1].Normalize()
-        v0=v1
-
-    centroid = ComputeCentroid(pd)
-
-    d=box2d.b2Vec2()
-    for i in range(pd.vertexCount):
-        i1 = i - 1 
-        if i1 < 0: i1 = pd.vertexCount - 1
-        i2 = i
-        n1 = normals[i1]
-        n2 = normals[i2]
-        v = verts[i] - centroid
-
-        d.x = box2d.b2Dot(n1, v) - box2d.b2_toiSlop
-        d.y = box2d.b2Dot(n2, v) - box2d.b2_toiSlop
-
-		# Shifting the edge inward by b2_toiSlop should
-		# not cause the plane to pass the centroid.
-
-		# Your shape has a radius/extent less than b2_toiSlop.
-#        if d.x < 0.0 or d.y <= 0.0: 
-#            raise ValueError, "Your shape has a radius/extent less than b2_toiSlop."
-
-        A = box2d.b2Mat22()
-        A.col1.x = n1.x; A.col2.x = n1.y
-        A.col1.y = n2.x; A.col2.y = n2.y
-		#coreVertices[i] = A.Solve(d) + m_centroid
-
-    return True
 
 def calc_center(points):
     """ Calculate the center of a polygon
@@ -191,7 +98,7 @@ def is_line(vertices, tolerance=25.0):
         
         # Append angle
         if fabs(vx) < 0.2: alpha = 90.0
-        else: alpha = degrees(atan(vy / vx))
+        else: alpha = degrees(atan2(vy,vx))
 
         alphas.append(fabs(alpha))
         
@@ -311,7 +218,7 @@ def reduce_poly_by_angle(vertices, tolerance=10.0, minlen=20):
         if fabs(vx) < 0.2:
             alpha = 90
         else: 
-            alpha = degrees(atan(vy * 1.0) / (vx*1.0))
+            alpha = degrees(atan2(vy,vx))
 
         if alpha_old == None:
             alpha_old = alpha

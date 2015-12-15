@@ -133,7 +133,7 @@ class draw_pygame(object):
             Return: -
         """
         self.draw.polygon(self.surface, clr, points, self.lineWidth)
-        #self.draw.aalines(self.surface, clr, True, points)
+        #self.draw.lines(self.surface, clr, True, points)
 
     def draw_lines(self, clr, closed, points, width=None):
         """ Draw a polygon
@@ -196,7 +196,7 @@ class draw_cairo(object):
         self.imagesurface = self.cairo.ImageSurface(self.cairo.FORMAT_ARGB32, self.width, self.height);
         self.ctx = ctx = self.cairo.Context(self.imagesurface)
 
-        ctx.set_source_rgb(0, 0, 0) # background color
+        ctx.set_source_rgb(1, 1, 1) # background color
         ctx.paint()
 
         ctx.move_to(0, 0)

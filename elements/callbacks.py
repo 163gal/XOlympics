@@ -53,10 +53,10 @@ class CallbackHandler:
             """
             # Create contact listener if required
             if callback_type in [CALLBACK_CONTACT_ADD, CALLBACK_CONTACT_PERSIST, CALLBACK_CONTACT_REMOVE]:
-                if self.parent.klistener == None:
-                    self.parent.klistener = kContactListener(self.get)
-                    self.parent.world.SetContactListener( self.parent.klistener )
-                    print "* kContactListener added"
+                if self.parent.listener == None:
+                    self.parent.listener = kContactListener(self.get)
+                    self.parent.world.SetContactListener( self.parent.listener )
+                    print "* ContactListener added"
             
             # Get callback dict for this callback_type
             c = self.callbacks[callback_type]

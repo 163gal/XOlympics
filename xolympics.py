@@ -19,14 +19,20 @@ import math
 import pygame
 from pygame.locals import *
 from pygame.color import *
-import olpcgames
 import elements
 from elements import Elements
 import tools
 from helpers import *
-from elements import box2d
+import sys
+sys.path.insert(0, "elements")
+import box2d
+from gi.repository import Gtk
+
 class XOlympicsGame:
-    def __init__(self,screen):
+    def __init__(self):
+        pass
+
+    def run(self):
         self.rightscore = self.leftscore = 0
         self.forcespeed = 75
         self.jumpforce = 20
@@ -40,11 +46,11 @@ class XOlympicsGame:
         self.rightJump = False
         self.updateList = []
 
-        self.screen = screen
+        pygame.init()
+        self.screen = pygame.display.get_surface()
         # get everything set up
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 24) # font object
-        self.canvas = olpcgames.ACTIVITY.canvas
         self.joystickobject = None 
         self.debug = True
         # kids laptop
@@ -52,7 +58,7 @@ class XOlympicsGame:
         self.toolList = {}
         for c in tools.allTools:
             self.toolList[c.name] = c(self)
-        self.currentTool = self.toolList[tools.allTools[0].name]
+        #self.currentTool = self.toolList[tools.allTools[0].name]
        # no tools, eh? 
         # set up the world (instance of Elements)
         self.world = elements.Elements(self.screen.get_size())
@@ -74,16 +80,16 @@ class XOlympicsGame:
 #        self.world.add.poly((900,800),((-300,300), (300, 300), (300, -300)), dynamic=True, density=1.0, restitution=0.16, friction=0.5)
         # self.leftplayer = self.world.add.rect((500,0), 25, 90, dynamic=True, density=1.0, restitution=0.16, friction=0.5)
         self.leftplayer.linearDamping = 0.07
-        self.test = self.leftplayer.GetWorldCenter() 
+        self.test = self.leftplayer.worldCenter 
 #        self.rightplayer = self.world.add.rect((900,775), 25, 90, dynamic=True, density=1.0, restitution=0.16, friction=0.5)
         # hack fix: set_color early!
-    def run(self):
+
         self.running = True    
         while self.running:
+            while Gtk.events_pending():
+                Gtk.main_iteration()
 
             for event in pygame.event.get():
-                if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                    self.running = False
                 if (event.type == KEYDOWN and (event.key == K_a or event.key == K_KP4)):
                     self.leftLPress = True
                 if (event.type == KEYUP and (event.key == K_a or event.key == K_KP4)):
@@ -117,34 +123,34 @@ class XOlympicsGame:
                 if (event.type == KEYUP and (event.key == K_DOWN or event.key == K_KP3)):
                     self.rightDPress = False             
 #            for event in pygame.event.get():
-                self.currentTool.handleEvents(event)
+                #self.currentTool.handleEvents(event)
             if self.leftLPress:
-                self.leftplayer.ApplyForce(box2d.b2Vec2(-self.forcespeed,0), self.leftplayer.GetWorldCenter())
+                self.leftplayer.ApplyForce(box2d.b2Vec2(-self.forcespeed,0), self.leftplayer.worldCenter, True)
             if self.leftRPress:
-                self.leftplayer.ApplyForce(box2d.b2Vec2(self.forcespeed,0), self.leftplayer.GetWorldCenter())
+                self.leftplayer.ApplyForce(box2d.b2Vec2(self.forcespeed,0), self.leftplayer.worldCenter, True)
             if self.leftJump:
-                if self.leftplayer.GetWorldCenter().y < 0.75:
-                    self.leftplayer.ApplyImpulse(box2d.b2Vec2(0,self.jumpforce), self.leftplayer.GetWorldCenter())
+                if self.leftplayer.worldCenter.y < 0.80:
+                    self.leftplayer.ApplyLinearImpulse(box2d.b2Vec2(0,self.jumpforce), self.leftplayer.worldCenter, True)
             if self.rightLPress:
-                self.rightplayer.ApplyForce(box2d.b2Vec2(-self.forcespeed,0), self.rightplayer.GetWorldCenter())
+                self.rightplayer.ApplyForce(box2d.b2Vec2(-self.forcespeed,0), self.rightplayer.worldCenter, True)
             if self.rightRPress:
-                self.rightplayer.ApplyForce(box2d.b2Vec2(self.forcespeed,0), self.rightplayer.GetWorldCenter())
+                self.rightplayer.ApplyForce(box2d.b2Vec2(self.forcespeed,0), self.rightplayer.worldCenter, True)
             if self.rightDPress:
-	            self.rightplayer.ApplyImpulse(box2d.b2Vec2(0,-self.jumpforce), self.rightplayer.GetWorldCenter())
+	            self.rightplayer.ApplyLinearImpulse(box2d.b2Vec2(0,-self.jumpforce), self.rightplayer.worldCenter, True)
             if self.rightJump:
-                if self.rightplayer.GetWorldCenter().y < 0.75:
-	                self.rightplayer.ApplyImpulse(box2d.b2Vec2(0,self.jumpforce), self.rightplayer.GetWorldCenter())
+                if self.rightplayer.worldCenter.y < 0.80:
+	                self.rightplayer.ApplyLinearImpulse(box2d.b2Vec2(0,self.jumpforce), self.rightplayer.worldCenter, True)
             if self.leftDPress:
-	            self.leftplayer.ApplyImpulse(box2d.b2Vec2(0,-self.jumpforce), self.leftplayer.GetWorldCenter())
+	            self.leftplayer.ApplyLinearImpulse(box2d.b2Vec2(0,-self.jumpforce), self.leftplayer.worldCenter, True)
             #if self.leftleft == True
-            #    self.leftplayer.ApplyForce((50,0), self.leftplayer.GetWorldCenter())
+            #    self.leftplayer.ApplyForce((50,0), self.leftplayer.worldCenter)
             # Clear Display
-            if self.ball.GetWorldCenter().x < 1:
+            if self.ball.worldCenter.x < 1:
                 print "Goal Blue!", self.rightscore
                 self.leftscore += 1
                 self.world.set_color((0, 0, 255))
                 self.ball = self.world.add.ball((600, 0), 50)
-            elif self.ball.GetWorldCenter().x > 11:
+            elif self.ball.worldCenter.x > 11:
                 print "Goal Red!", self.rightscore
                 self.rightscore += 1
                 self.world.set_color((255, 0, 0))
@@ -158,7 +164,7 @@ class XOlympicsGame:
             self.world.draw()
             
             # draw output from tools
-            self.currentTool.draw()
+            #self.currentTool.draw()
             
             #Print all the text on the screen
             
@@ -171,10 +177,6 @@ class XOlympicsGame:
             
             # Try to stay at 30 FPS
             self.clock.tick(30) # originally 50    
-
-    def setTool(self,tool):
-        self.currentTool.cancel()
-        self.currentTool = self.toolList[tool] 
 
 def main():
     toolbarheight = 75
