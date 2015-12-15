@@ -7,7 +7,9 @@ import pygame
 from pygame.locals import *
 from helpers import *
 from inspect import getmro
-from elements import box2d
+import sys
+sys.path.insert(0, "elements")
+import box2d
 # tools that can be used superlcass
 class Tool(object):
     name = "Tool"
@@ -19,29 +21,10 @@ class Tool(object):
     def handleEvents(self,event):
         handled = True
         # default event handling
-        if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-            # bye bye! Hope you had fun!
-            self.game.running = False
-        elif event.type == KEYDOWN:
+        if event.type == KEYDOWN:
             if event.key == K_SPACE:
                 #space pauses
                 self.game.world.run_physics = not self.game.world.run_physics  
-            elif event.key == K_t:
-                self.game.setTool("triangle")
-            elif event.key == K_b:
-                self.game.setTool("box")
-            elif event.key == K_c:
-                self.game.setTool("circle")
-            elif event.key == K_j:
-                self.game.setTool("joint")
-            elif event.key == K_p:
-                self.game.setTool("polygon")
-            elif event.key == K_g:
-                self.game.setTool("grab")
-            elif event.key == K_d:
-                self.game.setTool("destroy")
-            elif event.key == K_m:
-                self.game.setTool("magicpen")
             #elif event.key == K_g:
             #    self.game.setTool("gear")
             # Game/joystick-related keys
@@ -73,11 +56,7 @@ class Tool(object):
                 if self.game.joystickobject:
                     self.game.joystickobject[0].ApplyTorque(-9000) 
                 elif self.game.debug: print "Right gamepad X button error: no joystick object selected"
-        elif event.type == USEREVENT:
-            if hasattr(event,"action"):
-                if self.game.toolList.has_key(event.action): self.game.setTool(event.action)
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
-            self.game.canvas.grab_focus()
             handled = False
         else:
             handled = False
@@ -231,9 +210,9 @@ class PolygonTool(Tool):
         # draw the poly being created
         if self.vertices:
             for i in range(len(self.vertices)-1):
-                pygame.draw.line(self.game.screen,(100,180,255),self.vertices[i],self.vertices[i+1],3)
-            pygame.draw.line(self.game.screen,(100,180,255),self.vertices[-1],pygame.mouse.get_pos(),3)
-            pygame.draw.circle(self.game.screen,(100,180,255),self.vertices[0],15,3)  
+                pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[i]),self.vertices[i+1],3)
+            pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[-1]),pygame.mouse.get_pos(),3)
+            pygame.draw.circle(self.game.screen,(100,180,255),map(int, self.vertices[0]),15,3)  
     
     def cancel(self):       
         self.vertices = None
@@ -274,9 +253,9 @@ class MagicPenTool(Tool):
         # draw the poly being created
         if self.vertices:
             for i in range(len(self.vertices)-1):
-                pygame.draw.line(self.game.screen,(100,180,255),self.vertices[i],self.vertices[i+1],3)
-            pygame.draw.line(self.game.screen,(100,180,255),self.vertices[-1],pygame.mouse.get_pos(),3)
-            pygame.draw.circle(self.game.screen,(100,180,255),self.vertices[0],15,3)  
+                pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[i]),self.vertices[i+1],3)
+            pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[-1]),pygame.mouse.get_pos(),3)
+            pygame.draw.circle(self.game.screen,(100,180,255),map(int, self.vertices[0]),15,3)  
     
     def cancel(self):       
         self.vertices = None
