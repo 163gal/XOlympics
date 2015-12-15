@@ -1,0 +1,7 @@
+[Activity]
+name = XOlympics
+service_name = org.laptop.xolympics
+class = activity.XOlympicsActivity
+icon = activity-xolympics
+activity_version = 1
+show_launcher = yes
