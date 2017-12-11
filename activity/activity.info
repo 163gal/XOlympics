@@ -5,3 +5,5 @@ class = activity.XOlympicsActivity
 icon = activity-xolympics
 activity_version = 1
 show_launcher = yes
+repository = https://github.com/sugarlabs/XOlympics.git
+license = GPLv3+
