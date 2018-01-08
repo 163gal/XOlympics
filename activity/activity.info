@@ -1,9 +1,9 @@
 [Activity]
 name = XOlympics
-service_name = org.laptop.xolympics
-class = activity.XOlympicsActivity
+bundle_id = org.laptop.xolympics
+exec = sugar-activity activity.XOlympicsActivity
 icon = activity-xolympics
-activity_version = 1
+activity_version = 2
 show_launcher = yes
 repository = https://github.com/sugarlabs/XOlympics.git
 license = GPLv3+
