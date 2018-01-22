@@ -6,6 +6,8 @@ from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.activity.widgets import StopButton
 
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import tools
 import sugargame.canvas

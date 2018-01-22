@@ -41,6 +41,8 @@ from helpers import *
 import sys
 sys.path.insert(0, "elements")
 import box2d
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 class XOlympicsGame:
