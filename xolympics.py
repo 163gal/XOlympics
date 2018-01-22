@@ -138,7 +138,11 @@ class XOlympicsGame:
                 if (event.type == KEYDOWN and (event.key == K_DOWN or event.key == K_KP3)):
                     self.rightDPress = True
                 if (event.type == KEYUP and (event.key == K_DOWN or event.key == K_KP3)):
-                    self.rightDPress = False             
+                    self.rightDPress = False
+                if (event.type == pygame.QUIT):
+                    self.running = False
+                    pygame.quit()
+                    sys.exit()
 #            for event in pygame.event.get():
                 #self.currentTool.handleEvents(event)
             if self.leftLPress:
