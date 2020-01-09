@@ -39,11 +39,11 @@ class Tool(object):
             elif event.key == K_KP8: # Left gamepad, up arrow
                 if self.game.joystickobject:
                     self.game.joystickobject[0].ApplyTorque(9000) 
-                elif self.game.debug: print "Left gamepad up arrow error: no joystick object selected"
+                elif self.game.debug: print("Left gamepad up arrow error: no joystick object selected")
             elif event.key == K_KP2: # Left gamepad, down arrow
                 if self.game.joystickobject:
                     self.game.joystickobject[0].ApplyTorque(9000) 
-                elif self.game.debug: print "Left gamepad down arrow error: no joystick object selected"
+                elif self.game.debug: print("Left gamepad down arrow error: no joystick object selected")
             #elif event.key == K_KP7: # Right gamepad, square 
 #                self.game.rightplayer.ApplyForce(box2d.b2Vec2(-500, 0), self.game.leftplayer.GetWorldCenter())
             #elif event.key == K_KP1: # Right gamepad, check
@@ -51,11 +51,11 @@ class Tool(object):
             elif event.key == K_KP9: # Right gamepad, circle
                 if self.game.joystickobject:
                     self.game.joystickobject[0].ApplyTorque(-9000) 
-                elif self.game.debug: print "Right gamepad circle button error: no joystick object selected"
+                elif self.game.debug: print("Right gamepad circle button error: no joystick object selected")
             elif event.key == K_KP3: # Right gamepad, X
                 if self.game.joystickobject:
                     self.game.joystickobject[0].ApplyTorque(-9000) 
-                elif self.game.debug: print "Right gamepad X button error: no joystick object selected"
+                elif self.game.debug: print("Right gamepad X button error: no joystick object selected")
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             handled = False
         else:
@@ -210,9 +210,9 @@ class PolygonTool(Tool):
         # draw the poly being created
         if self.vertices:
             for i in range(len(self.vertices)-1):
-                pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[i]),self.vertices[i+1],3)
-            pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[-1]),pygame.mouse.get_pos(),3)
-            pygame.draw.circle(self.game.screen,(100,180,255),map(int, self.vertices[0]),15,3)  
+                pygame.draw.line(self.game.screen,(100,180,255),list(map(int, self.vertices[i])),self.vertices[i+1],3)
+            pygame.draw.line(self.game.screen,(100,180,255),list(map(int, self.vertices[-1])),pygame.mouse.get_pos(),3)
+            pygame.draw.circle(self.game.screen,(100,180,255),list(map(int, self.vertices[0])),15,3)  
     
     def cancel(self):       
         self.vertices = None
@@ -253,9 +253,9 @@ class MagicPenTool(Tool):
         # draw the poly being created
         if self.vertices:
             for i in range(len(self.vertices)-1):
-                pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[i]),self.vertices[i+1],3)
-            pygame.draw.line(self.game.screen,(100,180,255),map(int, self.vertices[-1]),pygame.mouse.get_pos(),3)
-            pygame.draw.circle(self.game.screen,(100,180,255),map(int, self.vertices[0]),15,3)  
+                pygame.draw.line(self.game.screen,(100,180,255),list(map(int, self.vertices[i])),self.vertices[i+1],3)
+            pygame.draw.line(self.game.screen,(100,180,255),list(map(int, self.vertices[-1])),pygame.mouse.get_pos(),3)
+            pygame.draw.circle(self.game.screen,(100,180,255),list(map(int, self.vertices[0])),15,3)  
     
     def cancel(self):       
         self.vertices = None
@@ -392,7 +392,7 @@ class JoystickTool(Tool):
                 self.vertices.pop(0)
             self.game.joystickobject = self.game.world.get_bodies_at_pos(pygame.mouse.get_pos())
             if self.game.joystickobject:
-                print "hi1"                
+                print("hi1")                
         #self.game.world.world.DestroyBody(self.joystickobject[0])
         elif event.type == MOUSEBUTTONUP and event.button == 1:
             self.cancel()
@@ -408,7 +408,7 @@ class JoystickTool(Tool):
 
 def getAllTools():
     this_mod = __import__(__name__)
-    all = [val for val in this_mod.__dict__.values() if isinstance(val, type)]
+    all = [val for val in list(this_mod.__dict__.values()) if isinstance(val, type)]
     allTools = []
     for a in all:
         if getmro(a).__contains__(Tool) and a!= Tool: allTools.append(a)

@@ -1,7 +1,7 @@
 [Activity]
 name = XOlympics
 bundle_id = org.laptop.xolympics
-exec = sugar-activity activity.XOlympicsActivity
+exec = sugar-activity3 activity.XOlympicsActivity
 icon = activity-xolympics
 activity_version = 3
 show_launcher = yes

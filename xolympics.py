@@ -167,12 +167,12 @@ class XOlympicsGame:
             #    self.leftplayer.ApplyForce((50,0), self.leftplayer.worldCenter)
             # Clear Display
             if self.ball.worldCenter.x < 1:
-                print "Goal Blue!", self.rightscore
+                print("Goal Blue!", self.rightscore)
                 self.leftscore += 1
                 self.world.set_color((0, 0, 255))
                 self.ball = self.world.add.ball((600, 0), 50)
             elif self.ball.worldCenter.x > 11:
-                print "Goal Red!", self.rightscore
+                print("Goal Red!", self.rightscore)
                 self.rightscore += 1
                 self.world.set_color((255, 0, 0))
                 self.ball = self.world.add.ball((600, 0), 50)
